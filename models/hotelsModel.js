@@ -32,7 +32,10 @@ const hotelSchema = new mongoose.Schema(
       type: Number,
       trim: true,
     },
-    address: [String],
+    address: {
+      type: String,
+      required:true,
+    },
     images: [String],
     imageCover: {
       type: String,

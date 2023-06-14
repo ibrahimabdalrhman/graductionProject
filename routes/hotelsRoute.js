@@ -3,7 +3,10 @@ const router = express.Router();
 
 const hotelService = require('../services/hotelService');
 
-router.post('/', hotelService.addHotel);
+router.post('/',
+  hotelService.uploadProductsImages,
+  hotelService.resizeImage,
+  hotelService.addHotel);
 
 router.get('/', hotelService.getHotels);
 
