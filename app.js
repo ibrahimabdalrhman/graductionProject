@@ -12,6 +12,7 @@ const DB = require('./config/database');
 const mountRoute = require('./routes');
 const errorMiddleware=require('./middlewares/errorMiddleware');
 const ApiError=require('./utils/apiError');
+const { webhookCheckout } = require("./services/bookHotelService");
 
 const app = express();
 DB();
@@ -27,6 +28,7 @@ app.options("*", cors());
 
 // compress all responses
 app.use(compression());
+app.post("/webhook-checkout", webhookCheckout);
 
 mountRoute(app);
 
