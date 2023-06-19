@@ -3,8 +3,10 @@ const router = express.Router();
 
 const hotelService = require('../services/hotelService');
 const hotelValidation = require('../utils/validation/hotelsValidation');
+const authService = require("../services/authService");
 
 router.post('/',
+  authService.auth,
   hotelService.uploadProductsImages,
   hotelService.resizeImage,
   hotelValidation.addHotelValidator,
@@ -20,12 +22,15 @@ router.get(
 
 router.put(
   "/:id",
+  authService.auth,
+
   hotelValidation.updateHotelValidator,
   hotelService.updateHotelById
 );
 
 router.delete(
   "/:id",
+  authService.auth,
   hotelValidation.deleteHotelValidator,
   hotelService.deleteHotelById
 );

@@ -13,6 +13,12 @@ const userSchema = new mongoose.Schema(
       required: [true, "email required"],
       unique: true,
     },
+    wishlist: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Hotel",
+      },
+    ],
     password: {
       type: String,
       required: [true, "password required"],
@@ -22,7 +28,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["admin", "user"],
-      default: "user"
+      default: "user",
     },
     phone: Number,
     image: String,
