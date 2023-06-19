@@ -1,4 +1,5 @@
 const express = require('express');
+const path=require('path')
 const dotenv = require("dotenv");
 dotenv.config({ path: "config.env" });
 const cors = require("cors");
@@ -14,6 +15,7 @@ const ApiError=require('./utils/apiError');
 
 const app = express();
 DB();
+app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express.json({ limit: "20kb" }));
 app.use(mongoSanitize());
 
@@ -26,7 +28,6 @@ app.options("*", cors());
 // compress all responses
 app.use(compression());
 
-
 mountRoute(app);
 
 const apiLimiter = rateLimit({
@@ -35,7 +36,6 @@ const apiLimiter = rateLimit({
   message:
     "Too many accounts created from this IP, please try again after an hour",
 });
-
 
 //404 error if not found page
 app.all('*', (req, res, next) => {

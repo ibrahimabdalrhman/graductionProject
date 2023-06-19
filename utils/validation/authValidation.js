@@ -7,7 +7,7 @@ exports.signupValidator = [
     .notEmpty()
     .withMessage("name required")
     .isLength({ min: 3, max: 30 })
-    .withMessage("name must be beltween [ 3 - 50 ] "),
+    .withMessage("name must be beltween [ 3 - 30 ] "),
   check("email")
     .notEmpty()
     .withMessage("email required")

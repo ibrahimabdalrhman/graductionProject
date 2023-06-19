@@ -8,7 +8,9 @@ router.post(
   contactValidation.addContactValidator,
   contactService.postContact
 );
-router.get("/all",contactService.getContacts)
+router.get("/all", contactService.getContacts)
+
+router.get("/test", contactService.test);
 
 
 

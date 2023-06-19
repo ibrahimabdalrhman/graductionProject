@@ -17,3 +17,25 @@ exports.getContacts = asyncHandler(async (req, res, next) => {
     data: contacts
   })
 });
+
+exports.test = asyncHandler(async (req, res, next) => {
+  const axios = require("axios");
+
+  // Replace 'YOUR_ACCESS_KEY' with your AviationStack API key
+  const accessKey = "a8b48bd8d76db2bb1394ed2efc6aab92";
+
+  // Define the params object with the required parameters
+  const params = {
+    access_key: accessKey,
+    // Add other parameters as needed
+  };
+
+  axios
+    .get("https://api.aviationstack.com/v1/flights", { params })
+    .then((response) => {
+      // Rest of your code
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});

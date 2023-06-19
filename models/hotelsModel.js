@@ -8,7 +8,7 @@ const hotelSchema = new mongoose.Schema(
       minLength: [3, "too short"],
       maxLength: [150, "too long"],
       trim: true,
-      unique:true
+      unique: true,
     },
     description: {
       type: String,
@@ -23,6 +23,10 @@ const hotelSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    totalRooms: {
+      type: Number,
+      default: 0,
+    },
     price: {
       type: Number,
       trim: true,
@@ -34,7 +38,7 @@ const hotelSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required:true,
+      required: true,
     },
     images: [String],
     imageCover: {
@@ -42,15 +46,15 @@ const hotelSchema = new mongoose.Schema(
       required: [true, "You must add at least a image to cover"],
     },
     country: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Country",
+      type: String,
       required: [true, "Hotel must belongs to Country"],
+      lowercase: [true, "country must be lowercase"],
     },
     city: [
       {
-        type: mongoose.Schema.ObjectId,
-        ref: "City",
+        type: String,
         required: [true, "Hotel must belongs to City"],
+        lowercase: [true, "city must be lowercase"],
       },
     ],
     ratingsAverage: {
@@ -62,10 +66,13 @@ const hotelSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    Basicfacilities:[ {
-      type: String,
-    }],
+    Basicfacilities: [
+      {
+        type: String,
+      },
+    ],
     comments: String,
+    phone: Number,
   },
   {
     timestamps: true,
@@ -89,22 +96,22 @@ const hotelSchema = new mongoose.Schema(
 //   next();
 // });
 
-// hotalSchema.post("init", (doc) => {
-//   const images=[]
-//   if (doc.images) {
-//     doc.images.map((img) => {
-//       const imageName = `${process.env.BASE_URL}/products/${img}`;
-//       images.push(imageName);
-//     });
-//     doc.images=images;
-//   }
-// });
+hotelSchema.post("init", (doc) => {
+  const images=[]
+  if (doc.images) {
+    doc.images.map((img) => {
+      const imageName = `${process.env.BASE_URL}/hotels/${img}`;
+      images.push(imageName);
+    });
+    doc.images=images;
+  }
+});
 
-// hotalSchema.post("init", (doc) => {
-//   if (doc.imageCover) {
-//     const imageURL = `${process.env.BASE_URL}/products/${doc.imageCover}`;
-//     doc.imageCover = imageURL;
-//   }
-// });
+hotelSchema.post("init", (doc) => {
+  if (doc.imageCover) {
+    const imageURL = `${process.env.BASE_URL}/hotels/${doc.imageCover}`;
+    doc.imageCover = imageURL;
+  }
+});
 
 module.exports = mongoose.model("Hotel", hotelSchema);
