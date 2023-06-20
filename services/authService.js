@@ -20,7 +20,7 @@ exports.signup = asyncHandler(async (req, res, next) => {
 exports.login = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return next(new ApiError("email not found", 400));
+    return next(new ApiError("email not found", 200));
   }
   const match = await bcrypt.compare(req.body.password, user.password);
   if (match) {
@@ -33,7 +33,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     });
   }
   console.log(user);
-  return next(new ApiError("password incorrect", 404));
+  return next(new ApiError("password incorrect", 200));
 });
 
 exports.logout = asyncHandler(async (req, res, next) => {
