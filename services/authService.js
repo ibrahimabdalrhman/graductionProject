@@ -26,8 +26,9 @@ exports.login = asyncHandler(async (req, res, next) => {
   if (match) {
     const token = createToken(user._id);
     return res.json({
-      status:"true",
+      status: "true",
       message: `${user.name} logged in successfully`,
+      user: user,
       token: token
     });
   }
