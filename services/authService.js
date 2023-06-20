@@ -25,7 +25,11 @@ exports.login = asyncHandler(async (req, res, next) => {
   const match = await bcrypt.compare(req.body.password, user.password);
   if (match) {
     const token = createToken(user._id);
-    return res.json({ data: user, token: token });
+    return res.json({
+      status:"true",
+      message: `${user.name} logged in successfully`,
+      token: token
+    });
   }
   console.log(user);
   return next(new ApiError("password incorrect", 404));

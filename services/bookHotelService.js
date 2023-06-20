@@ -6,12 +6,13 @@ const Hotel = require("../models/hotelsModel");
 reservedRooms = require("../models/reservedRoomsModel");
 
 exports.bookHotel = asyncHandler(async (req, res, next) => {
-
+console.log("log 1");
   //1) get cart depend on cartId
   const hotel = await Hotel.findById(req.params.hotelId);
   if (!hotel) {
     return next(new ApiError("Hotel Not Found", 404));
   }
+console.log("log 2");
 
   //2)get order price depend on total price of cart
   const totalOrderPrice = hotel.priceAfterDiscount
@@ -38,6 +39,9 @@ exports.bookHotel = asyncHandler(async (req, res, next) => {
     client_reference_id: req.params.hotelId,
     metadata: req.body.info,
   });
+  console.log("log 3");
+  console.log(session.success_url);
+
   res.status(200).json({ status: "success", data: session });
 });
 
