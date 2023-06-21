@@ -14,7 +14,7 @@ const createToken = (payload) =>
 exports.signup = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
   const token = createToken(user._id);
-  res.json({ data: user, token: token });
+  res.status(201).json({ data: user, token: token });
 });
 
 exports.login = asyncHandler(async (req, res, next) => {
@@ -25,7 +25,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   const match = await bcrypt.compare(req.body.password, user.password);
   if (match) {
     const token = createToken(user._id);
-    return res.json({
+    return res.status(200).json({
       status: "true",
       message: `${user.name} logged in successfully`,
       user: user,

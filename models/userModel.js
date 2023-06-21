@@ -44,4 +44,11 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
 });
 
+userSchema.post("init", (doc) => {
+  if (doc.image) {
+    const imageURL = `${process.env.BASE_URL}/users/${doc.image}`;
+    doc.image = imageURL;
+  }
+});
+
 module.exports = mongoose.model("User", userSchema);
