@@ -14,7 +14,12 @@ const createToken = (payload) =>
 exports.signup = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
   const token = createToken(user._id);
-  res.status(201).json({ data: user, token: token });
+  res.status(201).json({
+    status: "true",
+    message: ` successfully signed up`,
+    data: user,
+    token: token,
+  });
 });
 
 exports.login = asyncHandler(async (req, res, next) => {
