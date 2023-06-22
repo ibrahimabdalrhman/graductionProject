@@ -69,8 +69,27 @@ const hotelSchema = new mongoose.Schema(
     Basicfacilities: [
       {
         type: String,
+        enum: [
+          "wifi",
+          "badService",
+          "bathService",
+          "safetyCovid19",
+          "noPets",
+          "securitySafe",
+          "teaMaker",
+          "airCondition",
+          "parking",
+          "swimmingPool",
+          "gym",
+        ],
       },
     ],
+    room: {
+      type: String,
+    },
+    meals: {
+      type: String,
+    },
     comments: String,
     phone: Number,
   },
