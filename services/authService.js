@@ -42,7 +42,10 @@ exports.logout = asyncHandler(async (req, res, next) => {
     httpOnly: true,
     expires: new Date(0),
   });
-  res.status(200).json({ success: true, message: "Logged out" });
+  res.status(200).json({
+    status: "true"
+    , message: "Logged out"
+  });
 });
 
 exports.forgetPassword = asyncHandler(async (req, res, next) => {
@@ -96,9 +99,7 @@ Travel Planner`;
     return next(new ApiError("There is an error in sending email", 500));
   }
 
-  return res
-    .status(200)
-    .json({ status: "success", message: "Check Your Email" });
+  return res.status(200).json({ status: "true", message: "Check Your Email" });
 });
 
 exports.verifyResetCode = asyncHandler(async (req, res, next) => {
@@ -116,7 +117,7 @@ exports.verifyResetCode = asyncHandler(async (req, res, next) => {
   user.ResetCodeVerified = true;
   await user.save();
 
-  return res.status(200).json({ status: "success" });
+  return res.status(200).json({ status: "true" });
 });
 
 exports.resetPassword = asyncHandler(async (req, res, next) => {
@@ -134,7 +135,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   await user.save();
   const token = createToken(user._id);
   return res.status(200).json({
-    status: "success",
+    status: "true",
     message: "you update Password successfully",
     token,
   });

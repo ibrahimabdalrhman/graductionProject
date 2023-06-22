@@ -42,7 +42,7 @@ console.log("log 2");
   console.log("log 3");
   console.log(session.success_url);
 
-  res.status(200).json({ status: "success", data: session });
+  res.status(200).json({ status: "true", data: session });
 });
 
 
@@ -94,6 +94,6 @@ exports.webhookCheckout = async (req, res) => {
       // await Cart.findByIdAndDelete(event.data.object.client_reference_id);
     }
     console.log("order : ", order);
-    res.status(200).json({ received: "success" });
+    res.status(200).json({status: "true", received: "success" });
   }
 };

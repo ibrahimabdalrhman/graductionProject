@@ -34,7 +34,7 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
 
 
 exports.getProfile = asyncHandler(async (req, res, next) => {
-  res.status(200).json({ data: req.user });
+  res.status(200).json({status: "true", data: req.user });
 });
 
 
@@ -58,7 +58,7 @@ exports.updateProfileImage = asyncHandler(async (req, res, next) => {
     { image: req.body.image },
     { new: true }
   );
-  res.status(201).json({  user });
+  res.status(201).json({status: "true",data:  user });
 });
 
 
@@ -72,16 +72,16 @@ exports.removeProfileImage = asyncHandler(async (req, res, next) => {
     );
 
     const filePath = path.join("uploads", "users", modifiedImageUrl);
-    fs.unlink(filePath, (err) => {});
+    fs.unlink(filePath, (err) => { });
   }
 
   const user = await User.findByIdAndUpdate(
     req.user._id.toString(),
-    { image:null },
+    { image: null },
     { new: true }
   );
   
-  res.status(201).json({ user });
+  res.status(201).json({ status: "true", data: user });
 });
 
 
@@ -97,6 +97,6 @@ exports.updateCurrentUser = asyncHandler(async (req, res, next) => {
     { new: true }
   );
 
-    res.status(201).json({ message: "User Updated successfully", user });
+    res.status(201).json({status: "true", message: "User Updated successfully", user });
 
 })

@@ -12,7 +12,7 @@ exports.addHotelToWishlist = asyncHandler(async (req, res, next) => {
   );
 
   res.status(200).json({
-    status: "success",
+    status: "true",
     message: "Hotel added to your wishlist successfully",
     data: user.wishlist,
   });
@@ -28,7 +28,7 @@ exports.removeHotelfromWishlist = asyncHandler(async (req, res, next) => {
   );
 
   res.status(200).json({
-    status: "success",
+    status: "true",
     message: "Hotel deleted from your wishlist successfully",
     data: user.wishlist,
   });
@@ -41,7 +41,7 @@ exports.getWishlist = asyncHandler(async (req, res, next) => {
   });
 
   res.status(200).json({
-    status: "success",
+    status: "true",
     data: documents.wishlist,
   });
 });
