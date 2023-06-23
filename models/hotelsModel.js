@@ -100,6 +100,7 @@ const hotelSchema = new mongoose.Schema(
 );
 
 
+
 // hotalSchema.virtual("reviews", {
 //   ref: "Review",
 //   foreignField: "product",
