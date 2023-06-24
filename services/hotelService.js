@@ -5,6 +5,42 @@ const ApiError = require('../utils/apiError');
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 const {  uploadMultipleImages } = require("../middlewares/uploadImageMiddleware");
+const fs = require("fs");
+
+const mainFolderName = "uploads";
+const nestedFolderName = "hotels";
+const nestedFolderPath = `${mainFolderName}/${nestedFolderName}`;
+
+fs.stat(mainFolderName, (err, stats) => {
+  if (err) {
+    if (err.code === "ENOENT") {
+      // Main folder doesn't exist, create it
+      fs.mkdir(mainFolderName, (err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          createNestedFolder();
+        }
+      });
+    } else {
+      // Other error occurred
+      console.error(err);
+    }
+  } else {
+    // Main folder already exists
+    createNestedFolder();
+  }
+});
+
+function createNestedFolder() {
+  fs.mkdir(nestedFolderPath, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log("Nested folder created successfully!");
+    }
+  });
+}
 
 exports.uploadProductsImages = uploadMultipleImages([
   {
