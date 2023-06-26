@@ -43,7 +43,6 @@ const hotelSchema = new mongoose.Schema(
     images: [String],
     imageCover: {
       type: String,
-      required: [true, "You must add at least a image to cover"],
     },
     country: {
       type: String,
