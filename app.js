@@ -46,7 +46,7 @@ app.all('*', (req, res, next) => {
 app.use(errorMiddleware);
 
 
-const port = process.env.PORT;
+const port = process.env.PORT||3000;
 console.log(`Node Enviroment : ${process.env.NODE_ENV}`);
 
 app.listen(port, () => {
