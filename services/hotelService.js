@@ -14,8 +14,12 @@ const nestedFolderPath = `${mainFolderName}/${nestedFolderName}`;
 // Middleware to create necessary folders
 const createFoldersMiddleware = (req, res, next) => {
   try {
-    fs.mkdirSync(mainFolderName, { recursive: true });
-    fs.mkdirSync(nestedFolderPath, { recursive: true });
+    if (!fs.existsSync(mainFolderName)) {
+      fs.mkdirSync(mainFolderName);
+    }
+    if (!fs.existsSync(nestedFolderPath)) {
+      fs.mkdirSync(nestedFolderPath);
+    }
     next();
   } catch (err) {
     return next(new ApiError("Failed to create necessary folders", 500));
@@ -39,7 +43,7 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
       const imagesCovername = `hotel-${uuidv4()}-${Date.now()}.jpeg`;
       await sharp(req.files.imageCover[0].buffer)
         .toFormat("jpeg")
-        .toFile(`uploads/hotels/${imagesCovername}`);
+        .toFile(`${nestedFolderPath}/${imagesCovername}`);
       req.body.imageCover = imagesCovername;
     }
 
@@ -50,7 +54,7 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
           const imageName = `hotel-${uuidv4()}-${Date.now()}-${index + 1}.jpeg`;
           await sharp(img.buffer)
             .toFormat("jpeg")
-            .toFile(`uploads/hotels/${imageName}`);
+            .toFile(`${nestedFolderPath}/${imageName}`);
           req.body.images.push(imageName);
         })
       );
@@ -60,6 +64,7 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
     return next(new ApiError("Failed to resize images", 500));
   }
 });
+
 
 exports.addHotel = asyncHandler(async (req, res) => {
   const hotel = await Hotel.create(req.body);
