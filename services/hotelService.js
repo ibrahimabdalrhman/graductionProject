@@ -34,29 +34,32 @@ exports.uploadProductsImages = uploadMultipleImages([
 ]);
 
 exports.resizeImage = asyncHandler(async (req, res, next) => {
-  if (req.files && req.files.imageCover) {
-    const imagesCovername = `hotel-${uuidv4()}-${Date.now()}.jpeg`;
-    await sharp(req.files.imageCover[0].buffer)
-      .toFormat("jpeg")
-      .toFile(`uploads/hotels/${imagesCovername}`);
-    req.body.imageCover = imagesCovername;
-  }
+  try {
+    if (req.files && req.files.imageCover) {
+      const imagesCovername = `hotel-${uuidv4()}-${Date.now()}.jpeg`;
+      await sharp(req.files.imageCover[0].buffer)
+        .toFormat("jpeg")
+        .toFile(`uploads/hotels/${imagesCovername}`);
+      req.body.imageCover = imagesCovername;
+    }
 
-  if (req.files && req.files.images) {
-    req.body.images = [];
-    await Promise.all(
-      req.files.images.map(async (img, index) => {
-        const imageName = `hotel-${uuidv4()}-${Date.now()}-${index + 1}.jpeg`;
-        await sharp(img.buffer)
-          .toFormat("jpeg")
-          .toFile(`uploads/hotels/${imageName}`);
-        req.body.images.push(imageName);
-      })
-    );
+    if (req.files && req.files.images) {
+      req.body.images = [];
+      await Promise.all(
+        req.files.images.map(async (img, index) => {
+          const imageName = `hotel-${uuidv4()}-${Date.now()}-${index + 1}.jpeg`;
+          await sharp(img.buffer)
+            .toFormat("jpeg")
+            .toFile(`uploads/hotels/${imageName}`);
+          req.body.images.push(imageName);
+        })
+      );
+    }
+    next();
+  } catch (err) {
+    return next(new ApiError("Failed to resize images", 500));
   }
-  next();
 });
-
 
 exports.addHotel = asyncHandler(async (req, res) => {
   const hotel = await Hotel.create(req.body);
