@@ -11,21 +11,6 @@ const mainFolderName = "uploads";
 const nestedFolderName = "hotels";
 const nestedFolderPath = `${mainFolderName}/${nestedFolderName}`;
 
-// Middleware to create necessary folders
-const createFoldersMiddleware = (req, res, next) => {
-  try {
-    if (!fs.existsSync(mainFolderName)) {
-      fs.mkdirSync(mainFolderName);
-    }
-    if (!fs.existsSync(nestedFolderPath)) {
-      fs.mkdirSync(nestedFolderPath);
-    }
-    next();
-  } catch (err) {
-    return next(new ApiError("Failed to create necessary folders", 500));
-  }
-};
-
 exports.uploadProductsImages = uploadMultipleImages([
   {
     name: "imageCover",
