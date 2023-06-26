@@ -11,44 +11,16 @@ const mainFolderName = "uploads";
 const nestedFolderName = "hotels";
 const nestedFolderPath = `${mainFolderName}/${nestedFolderName}`;
 
-try {
-  fs.stat(mainFolderName, (err, stats) => {
-    if (err) {
-      if (err.code === "ENOENT") {
-        // Main folder doesn't exist, create it
-        fs.mkdir(mainFolderName, (err) => {
-          if (err) {
-            console.error(err);
-          } else {
-            createNestedFolder();
-          }
-        });
-      } else {
-        // Other error occurred
-        console.error(err);
-      }
-    } else {
-      // Main folder already exists
-      createNestedFolder();
-    }
-  });
-} catch (err) {
-  console.error(err);
-}
-
-function createNestedFolder() {
+// Middleware to create necessary folders
+const createFoldersMiddleware = (req, res, next) => {
   try {
-    fs.mkdir(nestedFolderPath, (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("Nested folder created successfully!");
-      }
-    });
+    fs.mkdirSync(mainFolderName, { recursive: true });
+    fs.mkdirSync(nestedFolderPath, { recursive: true });
+    next();
   } catch (err) {
-    console.error(err);
+    return next(new ApiError("Failed to create necessary folders", 500));
   }
-}
+};
 
 exports.uploadProductsImages = uploadMultipleImages([
   {
