@@ -12,6 +12,7 @@ const DB = require('./config/database');
 const mountRoute = require('./routes');
 const errorMiddleware=require('./middlewares/errorMiddleware');
 const ApiError = require('./utils/apiError');
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const { webhookCheckout } = require("./services/bookHotelService");
 
 const app = express();
