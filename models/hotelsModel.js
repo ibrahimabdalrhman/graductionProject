@@ -49,13 +49,12 @@ const hotelSchema = new mongoose.Schema(
       required: [true, "Hotel must belongs to Country"],
       lowercase: [true, "country must be lowercase"],
     },
-    city: [
+    city: 
       {
         type: String,
         required: [true, "Hotel must belongs to City"],
         lowercase: [true, "city must be lowercase"],
       },
-    ],
     ratingsAverage: {
       type: Number,
       min: [1, "Rating must be above or equal to 1"],
@@ -89,7 +88,6 @@ const hotelSchema = new mongoose.Schema(
     meals: {
       type: String,
     },
-    comments: String,
     phone: Number,
   },
   {
@@ -100,20 +98,11 @@ const hotelSchema = new mongoose.Schema(
 
 
 
-// hotalSchema.virtual("reviews", {
-//   ref: "Review",
-//   foreignField: "product",
-//   localField: "_id",
-// });
-
-// hotalSchema.pre(/^find/, function(next){
-
-//   this.populate({
-//     path: "category brand subCategory",
-//     select: "name -_id"
-//   })
-//   next();
-// });
+hotelSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "hotel",
+  localField: "_id",
+});
 
 hotelSchema.post("init", (doc) => {
   const images=[]

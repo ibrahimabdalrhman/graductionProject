@@ -4,6 +4,9 @@ const router = express.Router();
 const hotelService = require('../services/hotelService');
 const hotelValidation = require('../utils/validation/hotelsValidation');
 const authService = require("../services/authService");
+const reviewRoute = require('../routes/reviewRoute');
+
+router.use('/:hotelId/review', reviewRoute);
 
 router.post('/',
   authService.auth,
