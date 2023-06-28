@@ -30,7 +30,29 @@ app.options("*", cors());
 app.use(compression());
 
 //listen /webhook-checkout
-app.use("/webhook-checkout",webhookCheckout);
+// app.use("/webhook-checkout", webhookCheckout);
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  (req, res) => {
+    const sig = request.headers["stripe-signature"];
+
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+      response.status(400).send(`Webhook Error: ${err.message}`);
+      return;
+    }
+    console.log("succes event ::::: ",event);
+
+    // Handle the event
+    console.log(`Unhandled event type ${event.type}`);
+
+    // Return a 200 response to acknowledge receipt of the event
+  }
+);
 
 // to index routes
 mountRoute(app);
