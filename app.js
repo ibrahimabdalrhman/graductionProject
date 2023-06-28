@@ -34,7 +34,7 @@ app.use(compression());
 // app.use("/webhook-checkout", webhookCheckout);
 app.post(
   "/webhook-checkout",
-  express.raw({ type: "application/json" }),
+  express.raw({ type: "*/*" }),
   (request, response) => {
     const sig = request.headers["stripe-signature"];
 
