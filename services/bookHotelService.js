@@ -45,9 +45,8 @@ console.log("log 2");
   res.status(200).json({ status: "true", data: session });
 });
 
-
 exports.webhookCheckout = async (req, res) => {
-  console.log("start...");
+  console.log("start........");
   const sig = req.headers["stripe-signature"];
 
   let event;
@@ -58,7 +57,7 @@ exports.webhookCheckout = async (req, res) => {
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
-    console.log(event);
+    console.log("event:::::::::::::",event);
   } catch (err) {
     console.log(err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);

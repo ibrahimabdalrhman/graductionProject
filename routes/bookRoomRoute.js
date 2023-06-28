@@ -12,7 +12,7 @@ router
   .route("/:hotelId")
   .post(
     bookRoom.bookHotel
-  )
+  );
 //   .get(wishlistService.getWishlist);
 
 // router.route("/:id").delete(wishlistService.removeHotelfromWishlist);
