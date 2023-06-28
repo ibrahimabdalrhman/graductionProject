@@ -46,7 +46,30 @@ console.log("log 2");
   res.status(200).json({ status: "true", data: session });
 });
 
-exports.webhookCheckout = async (req, res) => {
+exports.webhookCheckout = asyncHandler(async (req, res, next) => {
+  const sig = req.headers["stripe-signature"];
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+console.log("event:",event);
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+  if (event.type === "checkout.session.completed") {
+    //  Create order
+console.log("create order");
+  }
+
+  res.status(200).json({ received: true });
+});
+
+exports.test = async (req, res) => {
   console.log("start........");
   const sig = req.headers["stripe-signature"];
   console.log("sig  ::::", sig);
@@ -64,7 +87,7 @@ exports.webhookCheckout = async (req, res) => {
     console.log(err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-  
+
 
   if (event.type === "checkout.session.completed") {
     console.log("create order here.................");
