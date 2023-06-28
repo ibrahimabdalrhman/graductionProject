@@ -27,6 +27,7 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
     if (req.files && req.files.imageCover) {
       const imagesCovername = `hotel-${uuidv4()}-${Date.now()}.jpeg`;
       await sharp(req.files.imageCover[0].buffer)
+        .resize(400)
         .toFormat("jpeg")
         .toFile(`${nestedFolderPath}/${imagesCovername}`);
       req.body.imageCover = imagesCovername;
@@ -38,6 +39,7 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
         req.files.images.map(async (img, index) => {
           const imageName = `hotel-${uuidv4()}-${Date.now()}-${index + 1}.jpeg`;
           await sharp(img.buffer)
+            .resize(400)
             .toFormat("jpeg")
             .toFile(`${nestedFolderPath}/${imageName}`);
           req.body.images.push(imageName);
@@ -49,8 +51,6 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
     return next(new ApiError("Failed to resize images", 500));
   }
 });
-
-
 exports.addHotel = asyncHandler(async (req, res) => {
   const hotel = await Hotel.create(req.body);
   res.status(201).json({
