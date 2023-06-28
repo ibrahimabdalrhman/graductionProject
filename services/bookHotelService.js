@@ -1,5 +1,6 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const asyncHandler = require("express-async-handler");
+const { Buffer } = require("buffer");
 const ApiError = require("../utils/apiError");
 const User = require("../models/userModel");
 const Hotel = require("../models/hotelsModel");
@@ -48,20 +49,22 @@ console.log("log 2");
 exports.webhookCheckout = async (req, res) => {
   console.log("start........");
   const sig = req.headers["stripe-signature"];
+  console.log("sig  ::::", sig);
 
   let event;
-
   try {
+    const rawBody = Buffer.from(JSON.stringify(req.body)); // Convert the parsed object to a Buffer
     event = stripe.webhooks.constructEvent(
-      req.body,
+      rawBody,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
-    console.log("event:::::::::::::",event);
+    console.log("event:::::::::::::", event);
   } catch (err) {
     console.log(err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
+  
 
   if (event.type === "checkout.session.completed") {
     console.log("create order here.................");
@@ -93,6 +96,6 @@ exports.webhookCheckout = async (req, res) => {
       // await Cart.findByIdAndDelete(event.data.object.client_reference_id);
     }
     console.log("order : ", order);
-    res.status(200).json({status: "true", received: "success" });
+    res.status(200).json({ status: "true", received: "success" });
   }
 };
