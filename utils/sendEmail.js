@@ -2,13 +2,9 @@ const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
-    host: "smtp.office365.com", // hostname
-    service: "outlook", // service name
-    secureConnection: true,
-    port:587,
-    tls: {
-      ciphers: "SSLv3", // tls version
-    }, // use TLS
+    host: "smtp.zoho.com",
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.EMAIL_USERNAME,
       pass: process.env.EMAIL_PASSWORD,
@@ -25,7 +21,7 @@ const sendEmail = async (options) => {
 //   );
 
   const mailerOptions = {
-    from: `Travel Planner <${process.env.EMAIL_USERNAME}>`,
+    from: `Travel Planner <ibrahimabdalrhman@zohomail.com>`,
     to: options.email,
     subject: options.subject,
     text: options.message,
