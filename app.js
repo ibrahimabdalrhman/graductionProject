@@ -18,7 +18,6 @@ const { webhookCheckout } = require("./services/bookHotelService");
 const app = express();
 DB();
 app.use(express.static(path.join(__dirname, "uploads")));
-app.use(express.json({ limit: "20kb" }));
 app.use(mongoSanitize());
 
 app.use(xss());
@@ -52,13 +51,13 @@ app.post(
       return;
     }
     console.log("succes event ::::: ",event);
-
     // Handle the event
     console.log(`Unhandled event type ${event.type}`);
-
     // Return a 200 response to acknowledge receipt of the event
   }
 );
+
+app.use(express.json({ limit: "20kb" }));
 
 // to index routes
 mountRoute(app);
