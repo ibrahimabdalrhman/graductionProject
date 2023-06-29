@@ -101,7 +101,7 @@ Travel Planner`;
     user.ResetCodeExpireAt = undefined;
     user.ResetCodeVerified = undefined;
     await user.save();
-    return next(new ApiError("There is an error in sending email", 500));
+    return next(new ApiError(err, 500));
   }
 
   return res.status(200).json({ status: "true", message: "Check Your Email" });

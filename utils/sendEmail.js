@@ -7,10 +7,11 @@ const sendEmail = async (options) => {
       user: process.env.EMAIL_USERNAME,
       pass: process.env.EMAIL_PASSWORD,
     },
-  });
+  }
+  );
 
   const mailerOptions = {
-    from: "Travel Planner <ibrahimabdalr7man@gmail.com>",
+    from: `Travel Planner <${process.env.EMAIL_USERNAME}>`,
     to: options.email,
     subject: options.subject,
     text: options.message,
