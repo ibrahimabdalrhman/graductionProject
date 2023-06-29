@@ -10,15 +10,6 @@ const sendEmail = async (options) => {
       pass: process.env.EMAIL_PASSWORD,
     },
   });
-// const sendEmail = async (options) => {
-//   const transporter = nodemailer.createTransport({
-//     service: process.env.EMAIL_HOST,
-//     auth: {
-//       user: process.env.EMAIL_USERNAME,
-//       pass: process.env.EMAIL_PASSWORD,
-//     },
-//   }
-//   );
 
   const mailerOptions = {
     from: `Travel Planner <ibrahimabdalrhman@zohomail.com>`,
