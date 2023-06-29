@@ -79,14 +79,20 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
       paidAt: Date.now(),
     });
     if (reservedRoom) {
-      const bulkOption = hotel.map((item) => ({
-        updateOne: {
-          filter: { _id: item._id },
-          update: { $inc: { availableRooms: -1, reservedRooms: +1 } },
-        },
-      }));
+
+console.log("hotel: ", hotel); // Check the value of 'hotel' variable
+
+const bulkOption = hotel.map((item) => ({
+  updateOne: {
+    filter: { _id: item._id },
+    update: { $inc: { availableRooms: -1, reservedRooms: +1 } },
+  },
+}));
+
+console.log("bulkOption: ", bulkOption); // Check the value of 'bulkOption'
 
       await Hotel.bulkWrite(bulkOption, {});
+      
     }
     res
       .status(200)
