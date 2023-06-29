@@ -10,7 +10,7 @@ const reservedRoomsSchema = new mongoose.Schema({
     from: {
       type: Date,
     },
-    toolbar: {
+    to: {
       type: Date,
     }
   },
