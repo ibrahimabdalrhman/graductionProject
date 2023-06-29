@@ -4,7 +4,7 @@ const { Buffer } = require("buffer");
 const ApiError = require("../utils/apiError");
 const User = require("../models/userModel");
 const Hotel = require("../models/hotelsModel");
-reservedRooms = require("../models/reservedRoomsModel");
+const ReservedRoom = require("../models/reservedRoomsModel");
 
 exports.bookHotel = asyncHandler(async (req, res, next) => {
   //1) get cart depend on cartId
@@ -41,53 +41,61 @@ exports.bookHotel = asyncHandler(async (req, res, next) => {
   res.status(200).json({ status: "true", data: session });
 });
 
-exports.webhookCheckout = asyncHandler(async (req, res,next) => {
-    const sig = req.headers["stripe-signature"];
+exports.webhookCheckout = asyncHandler(async (req, res, next) => {
+  const sig = req.headers["stripe-signature"];
 
-    let event;
+  let event;
 
-    try {
-      event = stripe.webhooks.constructEvent(
-        req.body,
-        sig,
-        process.env.STRIPE_WEBHOOK_SECRET
-      );
-    } catch (err) {
-      console.log(err);
-      res.status(400).send(`Webhook Error: ${err.message}`);
-      return;
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+  if (event.type === "checkout.session.completed") {
+    console.log("create order here.................");
+    console.log("hoteltId : ", event.data.object.client_reference_id);
+
+    const hotel = await Hotel.findById(event.data.object.client_reference_id);
+    if (!hotel) {
+      return next(new ApiError("Hotel Not Found", 404));
     }
-    if (event.type === "checkout.session.completed") {
-      console.log("create order here.................");
-      console.log("hoteltId : ", event.data.object.client_reference_id);
+    console.log("hotel : ", hotel);
 
-      const hotel = await Hotel.findById(event.data.object.client_reference_id);
-      if (!hotel) {
-        return next(new ApiError("Hotel Not Found", 404));
-      }
-      const user = await User.findOne({
-        email: event.data.object.customer_email,
-      });
-      const reservedRooms = await reservedRooms.create({
-        user: user._id,
-        date: event.data.object.metadata,
-        totalOrderPrice: event.data.object.amount_total / 100,
-        paidAt: Date.now(),
-      });
-      if (reservedRooms) {
-        const bulkOption = hotel.map((item) => ({
-          updateOne: {
-            filter: { _id: item._id },
-            update: { $inc: { availableRooms: -1, reservedRooms: +1 } },
-          },
-        }));
+    const user = await User.findOne({
+      email: event.data.object.customer_email,
+    });
+    console.log("hotel : ", user);
 
-        await Hotel.bulkWrite(bulkOption, {});
-      }
-      res
-        .status(200)
-        .json({ status: "true", message: "You reserved room successfuly", data: reservedRooms });
+    const reservedRoom = await ReservedRoom.create({
+      user: user._id,
+      date: event.data.object.metadata,
+      totalOrderPrice: event.data.object.amount_total / 100,
+      paidAt: Date.now(),
+    });
+    if (reservedRoom) {
+      const bulkOption = hotel.map((item) => ({
+        updateOne: {
+          filter: { _id: item._id },
+          update: { $inc: { availableRooms: -1, reservedRooms: +1 } },
+        },
+      }));
+
+      await Hotel.bulkWrite(bulkOption, {});
     }
+    res
+      .status(200)
+      .json({
+        status: "true",
+        message: "You reserved room successfuly",
+        data: reservedRoom,
+      });
+  }
 });
 
 // exports.test = async (req, res) => {
