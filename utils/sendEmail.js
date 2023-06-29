@@ -2,11 +2,11 @@ const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
-    host: "smtp-mail.outlook.com", // hostname
-    service: "outlook", // service name
-    secureConnection: true,
+   host: 'smtp-mail.outlook.com',                  // hostname
+    service: 'outlook',                             // service name
+    secureConnection: false,
     tls: {
-      ciphers: "SSLv3", // tls version
+        ciphers: 'SSLv3'                            // tls version
     }, // use TLS
     auth: {
       user: process.env.EMAIL_USERNAME,
