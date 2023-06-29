@@ -6,6 +6,11 @@ const reservedRoomsSchema = new mongoose.Schema({
     ref: "User",
     required: true
   },
+  hotel: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Hotel",
+    required: true
+  },
   date: {
     from: {
       type: Date,

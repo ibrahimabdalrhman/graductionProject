@@ -58,41 +58,28 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
     return;
   }
   if (event.type === "checkout.session.completed") {
-    console.log("create order here.................");
-    console.log("hoteltId : ", event.data.object.client_reference_id);
-
+    console.log("create order here..");
     const hotel = await Hotel.findById(event.data.object.client_reference_id);
     if (!hotel) {
       return next(new ApiError("Hotel Not Found", 404));
     }
-    console.log("hotel : ", hotel);
-
     const user = await User.findOne({
       email: event.data.object.customer_email,
     });
-    console.log("hotel : ", user);
-
     const reservedRoom = await ReservedRoom.create({
       user: user._id,
+      user: hotel._id,
       date: event.data.object.metadata,
       totalOrderPrice: event.data.object.amount_total / 100,
       paidAt: Date.now(),
     });
     if (reservedRoom) {
 
-console.log("hotel: ", hotel); // Check the value of 'hotel' variable
-
-const bulkOption = hotel.map((item) => ({
-  updateOne: {
-    filter: { _id: item._id },
-    update: { $inc: { availableRooms: -1, reservedRooms: +1 } },
-  },
-}));
-
-console.log("bulkOption: ", bulkOption); // Check the value of 'bulkOption'
-
-      await Hotel.bulkWrite(bulkOption, {});
-      
+      await Hotel.findByIdAndUpdate(
+        event.data.object.client_reference_id, // Match the document with the specified hotelId
+        { $inc: { availableRooms: -1, reservedRooms: 1 } }, // Update the fields
+        { new: true } // Return the updated document
+      );
     }
     res
       .status(200)
