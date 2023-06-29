@@ -46,14 +46,14 @@ console.log("log 2");
   res.status(200).json({ status: "true", data: session });
 });
 
-exports.webhookCheckout = asyncHandler(async (res, res,next) => {
-    const sig = res.headers["stripe-signature"];
+exports.webhookCheckout = asyncHandler(async (req, res) => {
+    const sig = req.headers["stripe-signature"];
 
     let event;
 
     try {
       event = stripe.webhooks.constructEvent(
-        res.body,
+        req.body,
         sig,
         process.env.STRIPE_WEBHOOK_SECRET
       );
