@@ -7,14 +7,11 @@ const Hotel = require("../models/hotelsModel");
 reservedRooms = require("../models/reservedRoomsModel");
 
 exports.bookHotel = asyncHandler(async (req, res, next) => {
-console.log("log 1");
   //1) get cart depend on cartId
   const hotel = await Hotel.findById(req.params.hotelId);
   if (!hotel) {
     return next(new ApiError("Hotel Not Found", 404));
   }
-console.log("log 2");
-
   //2)get order price depend on total price of cart
   const totalOrderPrice = hotel.priceAfterDiscount
     ? hotel.priceAfterDiscount
@@ -40,13 +37,11 @@ console.log("log 2");
     client_reference_id: req.params.hotelId,
     metadata: req.body.info,
   });
-  console.log("log 3");
-  console.log(session.success_url);
 
   res.status(200).json({ status: "true", data: session });
 });
 
-exports.webhookCheckout = asyncHandler(async (req, res) => {
+exports.webhookCheckout = asyncHandler(async (req, res,next) => {
     const sig = req.headers["stripe-signature"];
 
     let event;
@@ -62,63 +57,87 @@ exports.webhookCheckout = asyncHandler(async (req, res) => {
       res.status(400).send(`Webhook Error: ${err.message}`);
       return;
     }
-    console.log("succes event ::::: ",event);
-    // Handle the event
-    console.log(`Unhandled event type ${event.type}`);
-    // Return a 200 res to acknowledge receipt of the event
-  
+    if (event.type === "checkout.session.completed") {
+      console.log("create order here.................");
+      console.log("hoteltId : ", event.data.object.client_reference_id);
+
+      const hotel = await Hotel.findById(event.data.object.client_reference_id);
+      if (!hotel) {
+        return next(new ApiError("Hotel Not Found", 404));
+      }
+      const user = await User.findOne({
+        email: event.data.object.customer_email,
+      });
+      const reservedRooms = await reservedRooms.create({
+        user: user._id,
+        date: event.data.object.metadata,
+        totalOrderPrice: event.data.object.amount_total / 100,
+        paidAt: Date.now(),
+      });
+      if (reservedRooms) {
+        const bulkOption = hotel.map((item) => ({
+          updateOne: {
+            filter: { _id: item._id },
+            update: { $inc: { availableRooms: -1, reservedRooms: +1 } },
+          },
+        }));
+
+        await Hotel.bulkWrite(bulkOption, {});
+      }
+      res
+        .status(200)
+        .json({ status: "true", message: "You reserved room successfuly", data: reservedRooms });
+    }
 });
 
-exports.test = async (req, res) => {
-  console.log("start........");
-  const sig = req.headers["stripe-signature"];
-  console.log("sig  ::::", sig);
+// exports.test = async (req, res) => {
+//   const sig = req.headers["stripe-signature"];
 
-  let event;
-  try {
-    const rawBody = Buffer.from(JSON.stringify(req.body)); // Convert the parsed object to a Buffer
-    event = stripe.webhooks.constructEvent(
-      rawBody,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-    console.log("event:::::::::::::", event);
-  } catch (err) {
-    console.log(err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
+//   let event;
+//   try {
+//     const rawBody = Buffer.from(JSON.stringify(req.body)); // Convert the parsed object to a Buffer
+//     event = stripe.webhooks.constructEvent(
+//       rawBody,
+//       sig,
+//       process.env.STRIPE_WEBHOOK_SECRET
+//     );
+//     console.log("event:::::::::::::", event);
+//   } catch (err) {
+//     console.log(err.message);
+//     return res.status(400).send(`Webhook Error: ${err.message}`);
+//   }
 
 
-  if (event.type === "checkout.session.completed") {
-    console.log("create order here.................");
-    console.log("hoteltId : ", event.data.object.client_reference_id);
+//   if (event.type === "checkout.session.completed") {
+//     console.log("create order here.................");
+//     console.log("hoteltId : ", event.data.object.client_reference_id);
 
-    const hotel = await Hotel.findById(event.data.object.client_reference_id);
-    if (!hotel) {
-      return next(new ApiError("Hotel Not Found", 404));
-    }
-    const user = await User.findOne({
-      email: event.data.object.customer_email,
-    });
-    const reservedRooms = await reservedRooms.create({
-      user: user._id,
-      date: event.data.object.metadata,
-      totalOrderPrice: event.data.object.amount_total / 100,
-      paidAt: Date.now(),
-    });
-    if (reservedRooms) {
-      const bulkOption = hotel.map((item) => ({
-        updateOne: {
-          filter: { _id: item._id },
-          update: { $inc: { availableRooms: -1, reservedRooms: +1 } },
-        },
-      }));
+//     const hotel = await Hotel.findById(event.data.object.client_reference_id);
+//     if (!hotel) {
+//       return next(new ApiError("Hotel Not Found", 404));
+//     }
+//     const user = await User.findOne({
+//       email: event.data.object.customer_email,
+//     });
+//     const reservedRooms = await reservedRooms.create({
+//       user: user._id,
+//       date: event.data.object.metadata,
+//       totalOrderPrice: event.data.object.amount_total / 100,
+//       paidAt: Date.now(),
+//     });
+//     if (reservedRooms) {
+//       const bulkOption = hotel.map((item) => ({
+//         updateOne: {
+//           filter: { _id: item._id },
+//           update: { $inc: { availableRooms: -1, reservedRooms: +1 } },
+//         },
+//       }));
 
-      await Hotel.bulkWrite(bulkOption, {});
-      //5)clear user cart
-      // await Cart.findByIdAndDelete(event.data.object.client_reference_id);
-    }
-    console.log("order : ", order);
-    res.status(200).json({ status: "true", received: "success" });
-  }
-};
+//       await Hotel.bulkWrite(bulkOption, {});
+
+//     }
+//     res
+//       .status(200)
+//       .json({ status: "true", received: "success",data: reservedRooms });
+//   }
+// };
