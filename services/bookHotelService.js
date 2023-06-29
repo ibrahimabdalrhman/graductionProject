@@ -5,6 +5,7 @@ const ApiError = require("../utils/apiError");
 const User = require("../models/userModel");
 const Hotel = require("../models/hotelsModel");
 const ReservedRoom = require("../models/reservedRoomsModel");
+const { log } = require("console");
 
 exports.bookHotel = asyncHandler(async (req, res, next) => {
   //1) get cart depend on cartId
@@ -68,19 +69,24 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
     });
     const reservedRoom = await ReservedRoom.create({
       user: user._id,
-      user: hotel._id,
+      hotel: hotel._id,
       date: event.data.object.metadata,
       totalOrderPrice: event.data.object.amount_total / 100,
       paidAt: Date.now(),
     });
     if (reservedRoom) {
-
-      await Hotel.findByIdAndUpdate(
+      console.log("========hotel 1 ==========");
+      console.log(hotel.availableRooms);
+      console.log(hotel.reservedRooms);
+      const newHotel = await Hotel.findByIdAndUpdate(
         event.data.object.client_reference_id, // Match the document with the specified hotelId
         { $inc: { availableRooms: -1, reservedRooms: 1 } }, // Update the fields
         { new: true } // Return the updated document
       );
     }
+    console.log("========hotel 2 ==========");
+    console.log(newHotel.availableRooms);
+    console.log(newHotel.reservedRooms);
     res
       .status(200)
       .json({
