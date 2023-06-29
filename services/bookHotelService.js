@@ -46,28 +46,27 @@ console.log("log 2");
   res.status(200).json({ status: "true", data: session });
 });
 
-exports.webhookCheckout = asyncHandler(async (req, res, next) => {
-  const sig = req.headers["stripe-signature"];
-console.log(sig);
-console.log(stripe.webhooks);
-  let event;
+exports.webhookCheckout = asyncHandler(async (res, res,next) => {
+    const sig = res.headers["stripe-signature"];
 
-  try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-console.log("event:",event);
-  } catch (err) {
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-  if (event.type === "checkout.session.completed") {
-    //  Create order
-console.log("create order");
-  }
+    let event;
 
-  res.status(200).json({ received: true });
+    try {
+      event = stripe.webhooks.constructEvent(
+        res.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
+    } catch (err) {
+      console.log(err);
+      res.status(400).send(`Webhook Error: ${err.message}`);
+      return;
+    }
+    console.log("succes event ::::: ",event);
+    // Handle the event
+    console.log(`Unhandled event type ${event.type}`);
+    // Return a 200 res to acknowledge receipt of the event
+  
 });
 
 exports.test = async (req, res) => {
