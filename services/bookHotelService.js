@@ -79,11 +79,19 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
       console.log(hotel.availableRooms);
       console.log(hotel.reservedRooms);
       const newHotel = await Hotel.findByIdAndUpdate(
-        event.data.object.client_reference_id, // Match the document with the specified hotelId
+        {_id:event.data.object.client_reference_id.toString()}, // Match the document with the specified hotelId
         { $inc: { availableRooms: -1, reservedRooms: 1 } }, // Update the fields
         { new: true } // Return the updated document
       );
     }
+    console.log(
+    "id String :",
+      event.data.object.client_reference_id.toString()
+    );
+    console.log(
+      "id :",
+      event.data.object.client_reference_id
+    );
     console.log("========hotel 2 ==========");
     console.log(newHotel.availableRooms);
     console.log(newHotel.reservedRooms);
