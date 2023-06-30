@@ -37,7 +37,6 @@ exports.login = asyncHandler(async (req, res, next) => {
       token: token
     });
   }
-  console.log(user);
   return next(new ApiError("password incorrect", 200));
 });
 

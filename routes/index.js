@@ -6,6 +6,7 @@ const wishlistRoute = require("../routes/wishListRoute");
 const bookRoom = require("../routes/bookRoomRoute");
 const profileRoute = require("../routes/profileRoute");
 const reservedRooms = require("../routes/reservedRoom");
+const fligthRoute = require("../routes/fligthRoute");
 
 
 const mountRoute = (app) => {
@@ -17,7 +18,7 @@ const mountRoute = (app) => {
   app.use("/api/v1/wishlist", wishlistRoute);
   app.use("/api/v1/profile", profileRoute);
   app.use("/api/v1/bookRoom", bookRoom);
-  app.use("/api/v1/reservedRooms", reservedRooms);
+  app.use("/api/v1/fligths", fligthRoute);
 }
 
 

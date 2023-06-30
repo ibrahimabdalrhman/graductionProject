@@ -14,6 +14,7 @@ const errorMiddleware=require('./middlewares/errorMiddleware');
 const ApiError = require('./utils/apiError');
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const { webhookCheckout } = require("./services/bookHotelService");
+const { webhookCheckoutFligt } = require("./services/fligthService");
 
 const app = express();
 DB();
@@ -32,6 +33,7 @@ app.use(compression());
 //listen /webhook-checkout
 // app.use("/webhook-checkout", webhookCheckout);
 app.post("/webhook-checkout", express.raw({ type: "*/*" }), webhookCheckout);
+app.post("/webhook", express.raw({ type: "*/*" }), webhookCheckoutFligt);
 
 app.use(express.json({ limit: "20kb" }));
 
