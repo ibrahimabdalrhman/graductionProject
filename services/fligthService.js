@@ -57,7 +57,7 @@ exports.bookFligth = asyncHandler(async (req, res, next) => {
     success_url: `${req.protocol}://${req.get("host")}/successfulbooking`,
     cancel_url: `${req.protocol}://${req.get("host")}/fligths`,
     customer_email: req.user.email,
-    client_reference_id: req.params.fligthlId,
+    client_reference_id: req.params.fligthId,
     metadata: req.body.info,
   });
 
@@ -88,7 +88,7 @@ console.log("webhook work....")
     if (!fligth) {
       return next(new ApiError("Fligth Not Found", 404));
     }
-      console.log("webhook work.... EVENT : ", fligth);
+    console.log("webhook work.... EVENT : ", fligth);
 
     const user = await User.findOne({
       email: event.data.object.customer_email,
