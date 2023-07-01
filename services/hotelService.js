@@ -51,6 +51,7 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
     return next(new ApiError("Failed to resize images", 500));
   }
 });
+
 exports.addHotel = asyncHandler(async (req, res) => {
   const hotel = await Hotel.create(req.body);
   res.status(201).json({

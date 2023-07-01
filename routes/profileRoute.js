@@ -8,7 +8,6 @@ router.use(auth);
 
 router.get('/', profileService.getProfile);
 
-
 router.put(
   "/profileImage",
   profileService.uploadProfileImage,
