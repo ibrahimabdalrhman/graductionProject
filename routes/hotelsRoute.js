@@ -10,8 +10,8 @@ router.use('/:hotelId/review', reviewRoute);
 
 router.post('/',
   authService.auth,
-  // hotelService.uploadProductsImages,
-  // hotelService.resizeImage,
+  hotelService.uploadProductsImages,
+  hotelService.resizeImage,
   hotelValidation.addHotelValidator,
   hotelService.addHotel);
 
