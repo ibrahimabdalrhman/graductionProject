@@ -33,7 +33,10 @@ app.use(compression());
 //listen /webhook-checkout
 // app.use("/webhook-checkout", webhookCheckout);
 app.post("/webhook-checkout", express.raw({ type: "*/*" }), webhookCheckout);
-app.post("/webhook", express.raw({ type: "*/*" }), webhookCheckoutFligt);
+app.post("/webhook", express.raw({ type: "*/*" }), (re, res, next) => {
+  console.log("RUUUUUUUUUUUUUUNNN");
+  next()
+}, webhookCheckoutFligt);
 
 app.use(express.json({ limit: "20kb" }));
 
