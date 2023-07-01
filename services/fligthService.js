@@ -66,7 +66,7 @@ exports.bookFligth = asyncHandler(async (req, res, next) => {
 
 exports.webhookCheckoutFligt = asyncHandler(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
-
+console.log("webhook work....")
   let event;
 
   try {
@@ -80,12 +80,16 @@ exports.webhookCheckoutFligt = asyncHandler(async (req, res, next) => {
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
+  console.log("webhook work.... EVENT : ",event);
+
   if (event.type === "checkout.session.completed") {
-    console.log("create order here..");
+    console.log("create fligth here..");
     const fligth = await Fligth.findById(event.data.object.client_reference_id);
     if (!fligth) {
       return next(new ApiError("Fligth Not Found", 404));
     }
+      console.log("webhook work.... EVENT : ", fligth);
+
     const user = await User.findOne({
       email: event.data.object.customer_email,
     });
@@ -93,6 +97,7 @@ exports.webhookCheckoutFligt = asyncHandler(async (req, res, next) => {
       user: user._id,
       totalPrice: event.data.object.amount_total / 100,
     });
+      console.log("webhook work.... EVENT : ", bookedFligth);
 
     res.status(200).json({
       status: "true",
