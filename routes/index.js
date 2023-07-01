@@ -18,6 +18,7 @@ const mountRoute = (app) => {
   app.use("/api/v1/wishlist", wishlistRoute);
   app.use("/api/v1/profile", profileRoute);
   app.use("/api/v1/bookRoom", bookRoom);
+  app.use("/api/v1/reservedRooms", reservedRooms);
   app.use("/api/v1/fligths", fligthRoute);
 }
 

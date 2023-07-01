@@ -10,26 +10,32 @@ const {
 
 const User = require("../models/userModel");
 
+const mainFolderName = "uploads";
+const nestedFolderName = "users";
+const nestedFolderPath = `${mainFolderName}/${nestedFolderName}`;
 
 exports.uploadProfileImage = uploadMultipleImages([
   {
     name: "image",
     maxCount: 1,
   },
+
 ]);
 
-
 exports.resizeImage = asyncHandler(async (req, res, next) => {
-  if (req.files && req.files.image) {
-    const imageName = `user-${uuidv4()}-${Date.now()}.jpeg`;
-    await sharp(req.files.image[0].buffer)
-      .resize(200)
-      .toFormat("jpeg")
-      .toFile(`uploads/users/${imageName}`);
-    req.body.image = imageName;
+  try {
+    if (req.files && req.files.image) {
+      const imageName = `user-${uuidv4()}-${Date.now()}.jpeg`;
+      await sharp(req.files.image[0].buffer)
+        .resize(400)
+        .toFormat("jpeg")
+        .toFile(`${nestedFolderPath}/${imageName}`);
+      req.body.image = imageName;
+    }
+    next();
+  } catch (err) {
+    return next(new ApiError("Failed to resize images", 500));
   }
-
-  next();
 });
 
 
