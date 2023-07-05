@@ -16,9 +16,22 @@ const ApiError = require('./utils/apiError');
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const { webhookCheckout } = require("./services/bookHotelService");
 const { webhookCheckoutFligt } = require("./services/fligthService");
+const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
 
 const app = express();
 DB();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    uploadTempDir: "/tmp", // Specify a different temporary directory
+    limits: { fileSize: 50 * 1024 * 1024 },
+  })
+);
+
 app.use(express.static(path.join(__dirname, "uploads")));
 app.use(mongoSanitize());
 
