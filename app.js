@@ -19,10 +19,14 @@ const { webhookCheckoutFligt } = require("./services/fligthService");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 
+
 const app = express();
 DB();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
+app.set("views", `views`);
+
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 app.use(
   fileUpload({
@@ -48,6 +52,10 @@ app.use(compression());
 // app.use("/webhook-checkout", webhookCheckout);
 app.post("/webhook-checkout", express.raw({ type: "*/*" }), webhookCheckout);
 app.post("/webhook", express.raw({ type: "*/*" }), webhookCheckoutFligt);
+
+app.get("/success", (req, res) => {
+  res.render("success");
+});
 
 app.use(express.json({ limit: "20kb" }));
 

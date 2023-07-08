@@ -19,7 +19,7 @@ exports.uploadProductsImages = uploadMultipleImages([
   {
     name: "images",
     maxCount: 4,
-  },
+  },        
 ]);
 
 exports.resizeImage = asyncHandler(async (req, res, next) => {
