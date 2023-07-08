@@ -1,5 +1,18 @@
 const mongoose = require('mongoose');
 
+const imagecover =
+  "https://res.cloudinary.com/dowfl0pfi/image/upload/v1688799809/images/1688799761614.jpg";
+const image1 =
+  "https://res.cloudinary.com/dowfl0pfi/image/upload/v1688803151/images/1688803100124.jpg";
+const image2 =
+  "https://res.cloudinary.com/dowfl0pfi/image/upload/v1688803131/images/1688803088352.jpg";
+const image3 =
+  "https://res.cloudinary.com/dowfl0pfi/image/upload/v1688803059/images/1688803046453.jpg";
+const image4 =
+  "https://res.cloudinary.com/dowfl0pfi/image/upload/v1688802972/images/1688802928798.jpg";
+
+
+
 const hotelSchema = new mongoose.Schema(
   {
     name: {
@@ -40,9 +53,14 @@ const hotelSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    images: [String],
+    images:
+    {
+      type: [String],
+    default: [image1, image2, image3, image4]
+    },
     imageCover: {
       type: String,
+      default:imagecover
     },
     country: {
       type: String,
