@@ -122,22 +122,22 @@ hotelSchema.virtual("reviews", {
   localField: "_id",
 });
 
-hotelSchema.post("init", (doc) => {
-  const images=[]
-  if (doc.images) {
-    doc.images.map((img) => {
-      const imageName = `${process.env.BASE_URL}/hotels/${img}`;
-      images.push(imageName);
-    });
-    doc.images=images;
-  }
-});
+// hotelSchema.post("init", (doc) => {
+//   const images=[]
+//   if (doc.images) {
+//     doc.images.map((img) => {
+//       const imageName = `${process.env.BASE_URL}/hotels/${img}`;
+//       images.push(imageName);
+//     });
+//     doc.images=images;
+//   }
+// });
 
-hotelSchema.post("init", (doc) => {
-  if (doc.imageCover) {
-    const imageURL = `${process.env.BASE_URL}/hotels/${doc.imageCover}`;
-    doc.imageCover = imageURL;
-  }
-});
+// hotelSchema.post("init", (doc) => {
+//   if (doc.imageCover) {
+//     const imageURL = `${process.env.BASE_URL}/hotels/${doc.imageCover}`;
+//     doc.imageCover = imageURL;
+//   }
+// });
 
 module.exports = mongoose.model("Hotel", hotelSchema);
