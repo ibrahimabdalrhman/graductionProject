@@ -9,27 +9,27 @@ const cloudinary = require("../utils/cloudinary");
 
 
 exports.addPlaces = asyncHandler(async (req, res, next) => {
-  let imagesArr = [];
+  // let imagesArr = [];
 
-  if (req.files.images) {
-    const imagesFiles = req.files.images;
+  // if (req.files.images) {
+  //   const imagesFiles = req.files.images;
 
-    await Promise.all(
-      imagesFiles.map(async (element) => {
-        const image = element;
-        const uploadRes = await cloudinary.uploader.upload(image.tempFilePath, {
-          public_id: `${Date.now()}`,
-          resource_type: "auto",
-          folder: "places",
-        });
-        imagesArr.push(uploadRes.url);
+  //   await Promise.all(
+  //     imagesFiles.map(async (element) => {
+  //       const image = element;
+  //       const uploadRes = await cloudinary.uploader.upload(image.tempFilePath, {
+  //         public_id: `${Date.now()}`,
+  //         resource_type: "auto",
+  //         folder: "places",
+  //       });
+  //       imagesArr.push(uploadRes.url);
 
-        if (!uploadRes) {
-          return next(new ApiError("Error in uploading image", 500));
-        }
-        fs.unlinkSync(image.tempFilePath);
-      })
-    );
+  //       if (!uploadRes) {
+  //         return next(new ApiError("Error in uploading image", 500));
+  //       }
+  //       fs.unlinkSync(image.tempFilePath);
+  //     })
+  //   );
 
 
     const place = await Place.create({
@@ -37,82 +37,47 @@ exports.addPlaces = asyncHandler(async (req, res, next) => {
       city: req.body.city,
       description: req.body.description,
       address: req.body.address,
-      images: imagesArr,
+      images: req.body.images,
     });
 
     res.status(201).json({
       status: "true",
-      message: "Create new product successfully",
+      message: "Create new place successfully",
       data: place,
     });
-  } else {
-    const place = await Place.create({
-      name: req.body.name,
-      description: req.body.description,
-      address: req.body.address,
-      city: req.body.city,
-    });
+  // } else {
+  //   const place = await Place.create({
+  //     name: req.body.name,
+  //     description: req.body.description,
+  //     address: req.body.address,
+  //     city: req.body.city,
+  //   });
 
-    res.status(201).json({
-      status: "true",
-      message: "Create new product successfully",
-      data: place,
-    });
-  }
+  //   res.status(201).json({
+  //     status: "true",
+  //     message: "Create new product successfully",
+  //     data: place,
+  //   });
+  // }
 });
 
 
 exports.addRestaurant = asyncHandler(async (req, res, next) => {
-  let imagesArr = [];
 
-  if (req.files.images) {
-    const imagesFiles = req.files.images;
 
-    await Promise.all(
-      imagesFiles.map(async (element) => {
-        const image = element;
-        const uploadRes = await cloudinary.uploader.upload(image.tempFilePath, {
-          public_id: `${Date.now()}`,
-          resource_type: "auto",
-          folder: "restaurants",
-        });
-        imagesArr.push(uploadRes.url);
-
-        if (!uploadRes) {
-          return next(new ApiError("Error in uploading image", 500));
-        }
-        fs.unlinkSync(image.tempFilePath);
-
-      })
-    );
-
-    const restaurant = await Restaurant.create({
+    const place = await Restaurant.create({
       name: req.body.name,
       city: req.body.city,
       description: req.body.description,
       address: req.body.address,
-      images: imagesArr,
+      images: req.body.images,
     });
 
     res.status(201).json({
       status: "true",
-      message: "Create new product successfully",
-      restaurant,
+      message: "Create new Restaurant successfully",
+      data: place,
     });
-  } else {
-    const restaurant = await Restaurant.create({
-      name: req.body.name,
-      city: req.body.city,
-      description: req.body.description,
-      address: req.body.address,
-    });
-
-    res.status(201).json({
-      status: "true",
-      message: "Create new product successfully",
-      restaurant,
-    });
-  }
 });
 
 
