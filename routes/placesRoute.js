@@ -7,7 +7,7 @@ router.post('/add-place', placesServices.addPlaces);
 
 router.get('/get-all-places', placesServices.getPlaces);
 
-router.get('/details/:id', placesServices.getPlacesByCity);
+router.get('/details/:id', placesServices.getPlaceById);
 
 router.get('/:city', placesServices.getPlacesByCity);
 

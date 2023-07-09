@@ -95,6 +95,7 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
 
 exports.getPlaceById = asyncHandler(async (req, res, next) => {
   const places = await Place.findById(req.params.id);
+  console.log(req.params.id);
   res.status(201).json({ status: true, places });
 });
 
