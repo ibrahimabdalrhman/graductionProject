@@ -32,13 +32,7 @@ exports.addPlaces = asyncHandler(async (req, res, next) => {
   //   );
 
 
-    const place = await Place.create({
-      name: req.body.name,
-      city: req.body.city,
-      description: req.body.description,
-      address: req.body.address,
-      images: req.body.images,
-    });
+  const place = await Place.create(req.body);
 
     res.status(201).json({
       status: "true",
@@ -65,13 +59,7 @@ exports.addPlaces = asyncHandler(async (req, res, next) => {
 exports.addRestaurant = asyncHandler(async (req, res, next) => {
 
 
-    const place = await Restaurant.create({
-      name: req.body.name,
-      city: req.body.city,
-      description: req.body.description,
-      address: req.body.address,
-      images: req.body.images,
-    });
+    const place = await Restaurant.create(req.body);
 
     res.status(201).json({
       status: "true",
