@@ -32,8 +32,10 @@ exports.bookHotel = asyncHandler(async (req, res, next) => {
       },
     ],
     mode: "payment",
-    success_url: `${req.protocol}://${req.get("host")}/successfulbooking`,
-    cancel_url: `${req.protocol}://${req.get("host")}/hotels/${req.params.hotelId}`,
+    success_url: `${req.protocol}://${req.get("host")}/success`,
+    cancel_url: `${req.protocol}://${req.get("host")}/hotels/${
+      req.params.hotelId
+    }`,
     customer_email: req.user.email,
     client_reference_id: req.params.hotelId,
     metadata: req.body.info,

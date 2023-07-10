@@ -9,14 +9,14 @@ const placeSchema = new mongoose.Schema(
     },
     city: {
       type: String,
-      lowercase:true,
+      lowercase: true,
       required: true,
     },
     address: String,
-    description:String,
-    images: [String]
+    description: String,
+    images: [String],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Place", placeSchema);
